@@ -49,6 +49,7 @@ class _MyHomePage extends State<MyHomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       body: TabBarView(
+        physics: NeverScrollableScrollPhysics(),
         children: <Widget>[SecondDetail(), ThirdDetail(), FourthDetail()],
         controller: controller,
       ),
