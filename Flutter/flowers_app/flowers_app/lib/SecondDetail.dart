@@ -47,6 +47,19 @@ class _SecondDetailState extends State<SecondDetail> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "지도",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.lightGreen[600],
+        elevation: 0,
+      ),
       body: GoogleMap(
         mapType: MapType.normal,
         initialCameraPosition: _start,
@@ -66,8 +79,18 @@ class _SecondDetailState extends State<SecondDetail> {
           children: [
             FloatingActionButton.extended(
               onPressed: _goToUniv,
-              label: Text('현재 위치'),
-              icon: Icon(Icons.donut_large),
+              label: Text(
+                '현재 위치',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              icon: Icon(
+                Icons.donut_large,
+                color: Colors.white,
+              ),
             ),
             SizedBox(
               width: 10,
