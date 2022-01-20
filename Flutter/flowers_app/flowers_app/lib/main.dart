@@ -48,7 +48,9 @@ class _MyHomePage extends State<MyHomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: TabBarView(
+        physics: NeverScrollableScrollPhysics(),
         children: <Widget>[SecondDetail(), ThirdDetail(), FourthDetail()],
         controller: controller,
       ),
