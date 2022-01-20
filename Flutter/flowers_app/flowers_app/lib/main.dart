@@ -35,7 +35,7 @@ class _MyHomePage extends State<MyHomePage>
   @override
   void initState() {
     super.initState();
-    controller = TabController(length: 3, vsync: this);
+    controller = TabController(initialIndex: 1, length: 3, vsync: this);
     controller.addListener(() {});
   }
 
@@ -60,21 +60,21 @@ class _MyHomePage extends State<MyHomePage>
             icon: Icon(
               Icons.pin_drop,
               size: 35,
-              color: Colors.lightGreen,
+              color: Colors.lightGreen[800],
             ),
           ),
           Tab(
             icon: Icon(
               Icons.home,
               size: 35,
-              color: Colors.lightGreen,
+              color: Colors.lightGreen[800],
             ),
           ),
           Tab(
             icon: Icon(
               Icons.person,
               size: 35,
-              color: Colors.lightGreen,
+              color: Colors.lightGreen[800],
             ),
           ),
         ],
