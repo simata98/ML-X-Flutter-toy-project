@@ -1,6 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
+
 import 'thirdDetail.dart';
 import 'package:flutter/material.dart';
-
 import 'SecondDetail.dart';
 import 'fourthDetail.dart';
 
@@ -35,8 +36,13 @@ class _MyHomePage extends State<MyHomePage>
   @override
   void initState() {
     super.initState();
+    initFirebase();
     controller = TabController(initialIndex: 1, length: 3, vsync: this);
     controller.addListener(() {});
+  }
+
+  void initFirebase() async {
+    print(await Firebase.initializeApp());
   }
 
   @override
