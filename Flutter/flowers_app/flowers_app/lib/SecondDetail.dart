@@ -1,4 +1,9 @@
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+import 'package:flutter/services.dart' show rootBundle;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -24,6 +29,7 @@ class _SecondDetailState extends State<SecondDetail> {
   void initState() {
     _checkPermission();
     _getUserLocation();
+
     super.initState();
   }
 
@@ -77,24 +83,24 @@ class _SecondDetailState extends State<SecondDetail> {
         padding: EdgeInsets.all(8),
         child: Row(
           children: [
-            FloatingActionButton.extended(
-              onPressed: _goToUniv,
-              label: Text(
-                '현재 위치',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              icon: Icon(
-                Icons.donut_large,
-                color: Colors.white,
-              ),
-            ),
-            SizedBox(
-              width: 10,
-            )
+            //   FloatingActionButton.extended(
+            //     onPressed: _goToUniv,
+            //     label: Text(
+            //       '현재 위치',
+            //       style: TextStyle(
+            //         color: Colors.white,
+            //         fontSize: 16,
+            //         fontWeight: FontWeight.bold,
+            //       ),
+            //     ),
+            //     icon: Icon(
+            //       Icons.donut_large,
+            //       color: Colors.white,
+            //     ),
+            //   ),
+            //   SizedBox(
+            //     width: 10,
+            //   )
           ],
         ),
       ),
@@ -130,22 +136,39 @@ class _SecondDetailState extends State<SecondDetail> {
     controller.animateCamera(CameraUpdate.newCameraPosition(_univ));
   }
 
-  addMark(pos) {
-    int id = Random().nextInt(100);
+  addMark(pos) async {
+    // late BitmapDescriptor myIcon;
+    Uint8List iconData = await getBytesFromAsset('assets/images/flower.png');
+    int id = Random().nextInt(9999);
+    // BitmapDescriptor.fromAssetImage(
+    //         ImageConfiguration(size: Size(1, 1)), 'assets/images/flower.png')
+    //     .then((onValue) {
+    //   myIcon = onValue;
+    // });
+
     setState(() {
-      _markers.add(Marker(position: pos, markerId: MarkerId(id.toString())));
-      // if (tf) {
-      //   _markers.clear();
-      //   _markers.add(Marker(position: pos, markerId: MarkerId(id.toString())));
-      //   tf = !tf;
-      // } else {
-      //   _markers.add(Marker(
-      //       position: pos,
-      //       markerId: MarkerId('2'),
-      //       icon: BitmapDescriptor.defaultMarkerWithHue(
-      //           BitmapDescriptor.hueBlue)));
-      //   tf = !tf;
-      // }
+      _markers.add(Marker(
+          position: pos,
+          markerId: MarkerId(id.toString()),
+          infoWindow: InfoWindow(
+            title: 'firebase이름',
+            snippet: 'firebase 설명',
+          ),
+          icon: BitmapDescriptor.fromBytes(iconData)
+
+          // icon: await getMarkerIcon(
+          //     "./assets/images/ex.png", Size(150.0, 150.0))
+          ));
     });
+  }
+
+  Future<Uint8List> getBytesFromAsset(String path) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: 120);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+        .buffer
+        .asUint8List();
   }
 }
