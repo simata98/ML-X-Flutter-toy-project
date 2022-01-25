@@ -64,8 +64,8 @@ class _ThirdDetail extends State<ThirdDetail> {
   // tflite 모델과 라벨 가져오기
   loadModel() async {
     await Tflite.loadModel(
-      model: "assets/converted_model.tflite",
-      labels: "assets/label.txt",
+      model: "assets/model_unquant.tflite",
+      labels: "assets/labels.txt",
     ).then((value) {
       setState(() {
         //_loading = false;
@@ -75,11 +75,12 @@ class _ThirdDetail extends State<ThirdDetail> {
 
   // 이미지 분류
   Future classifyImage(File image) async {
+    var decodedImage = await decodeImageFromList(image.readAsBytesSync());
     var output = await Tflite.runModelOnImage(
         path: image.path,
-        imageMean: 0.0, // defaults to 117.0
+        imageMean: 177.0, // defaults to 117.0
         imageStd: 255.0, // defaults to 1.0
-        numResults: 5, // defaults to 5
+        numResults: 1, // defaults to 5
         threshold: 0.2, // defaults to 0.1
         asynch: true // defaults to true
         );
@@ -133,12 +134,12 @@ class _ThirdDetail extends State<ThirdDetail> {
                     child: new FlatButton(
                       child: new Text("Ok"),
                       onPressed: () {
-                        // addFlowerPoint();
-                        // addFlowerImage(_image!);
-                        // addFlowerPoint();
-                        // addFlowerTime();
-                        // addFlowerName(
-                        //     _outputs![0]['label'].toString().toUpperCase());
+                        addFlowerPoint();
+                        addFlowerImage(_image!);
+                        addFlowerPoint();
+                        addFlowerTime();
+                        addFlowerName(
+                            _outputs![0]['label'].toString().toUpperCase());
                         Navigator.pop(context);
                       },
                     ),
