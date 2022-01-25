@@ -27,7 +27,7 @@ class _SecondDetailState extends State<SecondDetail> {
 
   @override
   void initState() {
-    _checkPermission();
+    //_checkPermission();
     _getUserLocation();
 
     super.initState();
@@ -106,29 +106,6 @@ class _SecondDetailState extends State<SecondDetail> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
-  }
-
-  _checkPermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      } else {}
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are parmenently denied, we cannot request permissions');
-    }
   }
 
   Future<void> _goToUniv() async {
