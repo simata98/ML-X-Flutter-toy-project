@@ -53,8 +53,36 @@ class _ThirdDetail extends State<ThirdDetail> {
 
     recycleDialog();
   }
+  // tflite 모델과 라벨 가져오기
+  loadModel() async {
+    await Tflite.loadModel(
+      model: "assets/CNN_converted_model.tflite",
+      labels: "assets/label.txt",
+    ).then((value) {
+      setState(() {
+        //_loading = false;
+      });
+    });
+  }
 
-  Widget showImage() {
+  // 이미지 분류
+  Future classifyImage(File image) async {
+    print("asdasddas$image");
+    var output = await Tflite.runModelOnImage(
+        path: image.path,
+        imageMean: 0.0, // defaults to 117.0
+        imageStd: 255.0, // defaults to 1.0
+        numResults: 2, // defaults to 5
+        threshold: 0.2, // defaults to 0.1
+        asynch: true // defaults to true
+    );
+    setState(() {
+      _outputs = output;
+    });
+  }
+
+  // 이미지를 보여주는 위젯
+ Widget showImage() {
     return Container(
       padding: EdgeInsets.only(top: 8),
       width: 360,

@@ -58,6 +58,11 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    // .tflite 사용시 아래 문구 업데이트 (압축 막기)
+    aaptOptions {
+        noCompress "tflite"
+        noCompress "lite"
+    }
 }
 
 flutter {
@@ -68,5 +73,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation platform('com.google.firebase:firebase-bom:26.6.0')
     implementation 'com.google.firebase:firebase-analytics'
-
+    implementation 'org.tensorflow:tensorflow-lite:+'
 }
