@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'thirdDetail.dart';
 import 'package:flutter/material.dart';
@@ -37,12 +38,36 @@ class _MyHomePage extends State<MyHomePage>
   void initState() {
     super.initState();
     initFirebase();
+    _checkPermission();
     controller = TabController(initialIndex: 1, length: 3, vsync: this);
     controller.addListener(() {});
   }
 
   void initFirebase() async {
     print(await Firebase.initializeApp());
+  }
+
+  _checkPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      } else {}
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are parmenently denied, we cannot request permissions');
+    }
   }
 
   @override

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'firebase.dart';
+import 'fourthDetail.dart';
 import 'dart:io';
 
 class ThirdDetail extends StatefulWidget {
@@ -95,6 +97,8 @@ class _ThirdDetail extends State<ThirdDetail> {
                     child: new FlatButton(
                       child: new Text("Ok"),
                       onPressed: () {
+                        //addFlowerImage(_image!);
+                        addFlowerPoint();
                         Navigator.pop(context);
                       },
                     ),
@@ -290,7 +294,6 @@ class _ThirdDetail extends State<ThirdDetail> {
                                   onPressed: () {
                                     _image = null;
                                     getImage(ImageSource.gallery);
-                                    //addFlowerTime("s");
                                   },
                                   icon: Icon(
                                     Icons.photo,
