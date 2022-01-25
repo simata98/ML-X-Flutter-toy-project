@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 
-Future addFlowerTime(String time) async {
+Future addFlowerTime() async {
   final _collectionRef = FirebaseFirestore.instance
       .collection('flowers')
       .doc('6K9W1muEMmJoyKzulzdL');

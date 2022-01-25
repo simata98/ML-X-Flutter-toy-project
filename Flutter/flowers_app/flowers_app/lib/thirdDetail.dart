@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tflite/tflite.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'firebase.dart';
 import 'fourthDetail.dart';
@@ -16,6 +17,7 @@ class _ThirdDetail extends State<ThirdDetail> {
   File? _image;
   String imageurl = "assets/images/ex.png";
   final picker = ImagePicker();
+  List? _outputs;
 
   void _printTextEdit() {
     print('${_textStream.text}');
@@ -27,6 +29,9 @@ class _ThirdDetail extends State<ThirdDetail> {
     // loadModel().then((value) {
     //   setState(() {});
     // });
+    loadModel().then((value) {
+      setState(() {});
+    });
 
     _textStream.addListener(_printTextEdit);
   }
@@ -34,6 +39,7 @@ class _ThirdDetail extends State<ThirdDetail> {
   //앱이 종료될 때
   void dispose() {
     _textStream.dispose();
+    Tflite.close();
     super.dispose();
   }
 
@@ -49,14 +55,16 @@ class _ThirdDetail extends State<ThirdDetail> {
       setState(() {
         _image = File(PickedFile.path); //가져온 이미지를 _image에 저장
       });
+      await classifyImage(File(_image!.path));
     }
 
     recycleDialog();
   }
+
   // tflite 모델과 라벨 가져오기
   loadModel() async {
     await Tflite.loadModel(
-      model: "assets/CNN_converted_model.tflite",
+      model: "assets/converted_model.tflite",
       labels: "assets/label.txt",
     ).then((value) {
       setState(() {
@@ -67,22 +75,22 @@ class _ThirdDetail extends State<ThirdDetail> {
 
   // 이미지 분류
   Future classifyImage(File image) async {
-    print("asdasddas$image");
     var output = await Tflite.runModelOnImage(
         path: image.path,
         imageMean: 0.0, // defaults to 117.0
         imageStd: 255.0, // defaults to 1.0
-        numResults: 2, // defaults to 5
+        numResults: 5, // defaults to 5
         threshold: 0.2, // defaults to 0.1
         asynch: true // defaults to true
-    );
+        );
     setState(() {
       _outputs = output;
+      print(_outputs);
     });
   }
 
   // 이미지를 보여주는 위젯
- Widget showImage() {
+  Widget showImage() {
     return Container(
       padding: EdgeInsets.only(top: 8),
       width: 360,
@@ -109,24 +117,28 @@ class _ThirdDetail extends State<ThirdDetail> {
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  // children: <Widget>[
-                  //   Text(
-                  //     _outputs![0]['label'].toString().toUpperCase(),
-                  //     style: TextStyle(
-                  //       color: Colors.black,
-                  //       fontSize: 15.0,
-                  //       background: Paint()..color = Colors.white,
-                  //     ),
-                  //   ),
-                  // ],
+                  children: <Widget>[
+                    Text(
+                      _outputs![0]['label'].toString().toUpperCase(),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15.0,
+                        background: Paint()..color = Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
                 actions: <Widget>[
                   Center(
                     child: new FlatButton(
                       child: new Text("Ok"),
                       onPressed: () {
-                        //addFlowerImage(_image!);
-                        addFlowerPoint();
+                        // addFlowerPoint();
+                        // addFlowerImage(_image!);
+                        // addFlowerPoint();
+                        // addFlowerTime();
+                        // addFlowerName(
+                        //     _outputs![0]['label'].toString().toUpperCase());
                         Navigator.pop(context);
                       },
                     ),
