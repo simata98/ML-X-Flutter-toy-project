@@ -1,6 +1,8 @@
-import 'package:flowers_app/thirdDetail.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geolocator/geolocator.dart';
 
 class FourthDetail extends StatefulWidget {
   _FourthDetail createState() => _FourthDetail();
@@ -9,10 +11,17 @@ class FourthDetail extends StatefulWidget {
 class Flowers {
   List flowerName = [];
   List flowerTime = [];
+  List positionX = [];
+  List positionY = [];
+  List image = [];
 
-  Flowers(List flowerN, List flowerT) {
+  Flowers(
+      List flowerN, List flowerT, List positionX, List positionY, List image) {
     this.flowerName = flowerN;
     this.flowerTime = flowerT;
+    this.positionX = positionX;
+    this.positionY = positionY;
+    this.image = image;
   }
 }
 
@@ -21,6 +30,9 @@ class _FourthDetail extends State<FourthDetail> {
   String text = "";
   List flowerName = [];
   List flowerTime = [];
+  List flowerPosX = [];
+  List flowerPosY = [];
+  List flowerimage = [];
 
   void initState() {
     super.initState();
@@ -36,45 +48,36 @@ class _FourthDetail extends State<FourthDetail> {
   Future<Flowers> getFlower() async {
     List _flowersN = [];
     List _flowersT = [];
+    List<dynamic> _positionX = [];
+    List<dynamic> _positionY = [];
+    List _image = [];
 
-    final _collectionRefN = FirebaseFirestore.instance
+    final _collectionRef = FirebaseFirestore.instance
         .collection('flowers')
         .doc('6K9W1muEMmJoyKzulzdL');
-    final _collectionRefT = FirebaseFirestore.instance
-        .collection('flowers')
-        .doc('6K9W1muEMmJoyKzulzdL');
 
-    var _docSnapshotN = await _collectionRefN.get();
+    var _docSnapshotN = await _collectionRef.get();
     _flowersN = _docSnapshotN['name'];
-    var _docSnapshotT = await _collectionRefT.get();
+    var _docSnapshotT = await _collectionRef.get();
     _flowersT = _docSnapshotT['time'];
+    var _docSnapshotP = await _collectionRef.get();
+    _positionX = _docSnapshotP['pointX'];
+    _positionY = _docSnapshotP['pointY'];
+    var _docSnapshotI = await _collectionRef.get();
+    _image = _docSnapshotI['image'];
 
     timestampToDate(_flowersT);
 
     flowerTime = _flowersT;
     flowerName = _flowersN;
+    flowerPosX = _positionX;
+    flowerPosY = _positionY;
+    flowerimage = _image;
 
-    Flowers flowers = new Flowers(flowerName, flowerTime);
+    Flowers flowers = new Flowers(
+        flowerName, flowerTime, flowerPosX, flowerPosY, flowerimage);
 
     return flowers;
-  }
-
-  Future addFlowerTime(String time) async {
-    final _collectionRef = FirebaseFirestore.instance
-        .collection('flowers')
-        .doc('6K9W1muEMmJoyKzulzdL');
-    _collectionRef.update({
-      'time': FieldValue.arrayUnion([DateTime.now()])
-    });
-  }
-
-  Future addFlowerName(String name) async {
-    final _collectionRef = FirebaseFirestore.instance
-        .collection('flowers')
-        .doc('6K9W1muEMmJoyKzulzdL');
-    _collectionRef.update({
-      'name': FieldValue.arrayUnion([name])
-    });
   }
 
   @override
@@ -100,14 +103,29 @@ class _FourthDetail extends State<FourthDetail> {
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
-                padding: EdgeInsets.all(50),
                 itemCount: flowerName.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                        "꽃 이름 : ${flowerName[index]}  저장한 시간 : ${flowerTime[index]}"),
-                  );
+                  return Expanded(
+                      child: Container(
+                    height: 80,
+                    child: Row(
+                      children: [
+                        flowerimage[index] == null
+                            ? Image(image: AssetImage('assets/images/ex.png'))
+                            : Image.file(File(flowerimage[index])),
+                        Container(
+                          child: Column(
+                            children: [
+                              Text("꽃 이름 : ${flowerName[index]} "),
+                              Text("저장한 시간 : ${flowerTime[index]} "),
+                              Text("위도 : ${flowerPosX[index]}"),
+                              Text("경도 : ${flowerPosY[index]}"),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ));
                 });
           } else if (snapshot.hasError) {
             return Padding(
