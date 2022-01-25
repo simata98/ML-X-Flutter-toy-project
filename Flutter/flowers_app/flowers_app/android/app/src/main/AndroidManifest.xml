@@ -2,6 +2,7 @@
     package="com.example.flowers_app">
     <uses-permission android:name="andorid.permission.ACCESS-FINE-LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
    <application
         android:label="flowers_app"
         android:name="${applicationName}"
