@@ -150,7 +150,7 @@ class _SecondDetailState extends State<SecondDetail> {
 
   addMark() async {
     getFlower();
-    Uint8List iconData = await getBytesFromAsset('assets/images/flower.png');
+    Uint8List iconData = await getBytesFromAsset('assets/images/ex.png');
 
     setState(() {
       for (int i = 0; i < flowerName.length; ++i) {
