@@ -109,7 +109,7 @@ class _FourthDetail extends State<FourthDetail> {
                     height: 80,
                     child: Row(
                       children: [
-                        flowerimage[index] == null
+                        flowerimage.isEmpty
                             ? Image(image: AssetImage('assets/images/ex.png'))
                             : Image.file(File(flowerimage[index])),
                         Container(
