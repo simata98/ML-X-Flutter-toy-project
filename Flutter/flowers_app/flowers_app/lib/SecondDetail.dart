@@ -154,6 +154,7 @@ class _SecondDetailState extends State<SecondDetail> {
 
     setState(() {
       for (int i = 0; i < flowerName.length; ++i) {
+        print("d");
         var lat = double.parse(flowerPosX[i]);
         var lng = double.parse(flowerPosY[i]);
         print(lat);
