@@ -16,7 +16,7 @@ Future addFlowerName(String name) async {
       .collection('flowers')
       .doc('6K9W1muEMmJoyKzulzdL');
   _collectionRef.update({
-    'name': FieldValue.arrayUnion([name])
+    'name': FieldValue.arrayUnion([name]),
   });
 }
 

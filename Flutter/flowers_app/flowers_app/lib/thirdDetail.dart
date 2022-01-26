@@ -127,12 +127,29 @@ class _ThirdDetail extends State<ThirdDetail> {
                         background: Paint()..color = Colors.white,
                       ),
                     ),
+                    Text("정보를 더 알아보시겠습니까?"),
                   ],
                 ),
                 actions: <Widget>[
                   Center(
                     child: new FlatButton(
                       child: new Text("Ok"),
+                      onPressed: () {
+                        addFlowerPoint();
+                        addFlowerImage(_image!);
+                        addFlowerPoint();
+                        addFlowerTime();
+                        addFlowerName(
+                            _outputs![0]['label'].toString().toUpperCase());
+                        Navigator.pop(context);
+                        launchURL(
+                            _outputs![0]['label'].toString().toUpperCase());
+                      },
+                    ),
+                  ),
+                  Center(
+                    child: new FlatButton(
+                      child: new Text("No"),
                       onPressed: () {
                         addFlowerPoint();
                         addFlowerImage(_image!);
